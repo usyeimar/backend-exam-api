@@ -42,6 +42,8 @@ jobs:
     - name: Passport Key
       run: php artisan passport:keys
 
+    - name: yarn install and build
+      run: yarn install && yarn run build
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
 
