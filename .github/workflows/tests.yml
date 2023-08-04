@@ -39,6 +39,9 @@ jobs:
     - name: Generate key
       run: php artisan key:generate
 
+   - name: Passport Install
+      run: php artisan  customer:passport:install  --personal --name=test
+
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
 
