@@ -44,8 +44,8 @@ jobs:
 
     - name: Execute tests (Unit and Feature tests) via Pest Plugin
       env:
-        MYSQL_DATABASE: test_db
-        DB_USERNAME: user
+        MYSQL_DATABASE: backend_test
+        DB_USERNAME: root
         DB_PASSWORD: secret
         DB_PORT: ${{ job.services.mysql.ports[3306] }}
       run: vendor/bin/pest
