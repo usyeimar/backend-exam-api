@@ -1,11 +1,11 @@
 name: Tests
 
-on: ['push', 'pull_request']
+on: ["push", "pull_request"]
 
 jobs:
-  ci:
+  testing:
     runs-on: ubuntu-latest
-
+   
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -13,9 +13,9 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: '8.1.15'
           tools: composer:v2
-          coverage: xdebug
+          coverage: none
 
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
