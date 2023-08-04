@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\User;
-use function Pest\Laravel\{assertDatabaseMissing, getJson};
+use function Pest\Laravel\assertDatabaseMissing;
+use function Pest\Laravel\getJson;
 
 test('can logout', function () {
     $user = User::factory()->create();

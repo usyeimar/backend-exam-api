@@ -7,7 +7,6 @@ it('can create a user', function () {
     $user = User::factory()->create();
     $this->signIn($user);
 
-
     $data = [
         'first_name' => 'Yeimar-test',
         'last_name' => 'Garcia test',
@@ -28,7 +27,6 @@ it('can create a user', function () {
         ])->toArray()
     );
 });
-
 
 it('first_name is required', function () {
     $user = User::factory()->create();

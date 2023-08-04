@@ -10,13 +10,12 @@ use App\Models\Customer;
 use App\OpenApi\SecuritySchemes\ApiAuthorizationTokenSecurityScheme;
 use App\Services\Customers\CreateCustomers;
 use App\Services\Customers\UploadDocumentForCustomer;
+use function base64_encode;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Vyuldashev\LaravelOpenApi\Attributes as OpenApi;
-use function base64_encode;
 
 #[OpenApi\PathItem]
 class CustomerControllers extends Controller
@@ -105,13 +104,10 @@ class CustomerControllers extends Controller
 
     }
 
-
     /**
      * Upload a document for a customer
      *
-     * @param string $customerId - The customer id
-     * @param UploadCustomerDocumentRequest $request
-     * @param UploadDocumentForCustomer $uploadDocumentForCustomer
+     * @param  string  $customerId - The customer id
      * @return JsonResponse|void
      */
     #[OpenApi\Operation(tags: ['Customers'], security: ApiAuthorizationTokenSecurityScheme::class)]
@@ -122,7 +118,7 @@ class CustomerControllers extends Controller
     ) {
         try {
 
-            if (!$customerId) {
+            if (! $customerId) {
                 abort(400, 'Customer id is required');
             }
 
@@ -135,10 +131,8 @@ class CustomerControllers extends Controller
 
             $path = Storage::disk('public')->path('customers/documents/'.$fileName);
 
-
             $customer = Customer::query()
                 ->findOrFail($customerId);
-
 
             $customer->identification_document_base_64 = base64_encode(file_get_contents($path));
 
@@ -149,12 +143,10 @@ class CustomerControllers extends Controller
                 'data' => $customer->fresh(),
             ]);
 
-
         } catch (ModelNotFoundException $e) {
             abort(404, 'Not foun this resource with id: '.$customerId);
         } catch (\Exception $e) {
             abort(400, $e->getMessage());
         }
     }
-
 }

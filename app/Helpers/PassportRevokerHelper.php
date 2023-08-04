@@ -2,7 +2,6 @@
 
 namespace App\Helpers;
 
-use App\Helpers;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 

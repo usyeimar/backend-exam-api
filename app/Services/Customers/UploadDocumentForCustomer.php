@@ -7,10 +7,7 @@ use Nyholm\Psr7\UploadedFile;
 
 class UploadDocumentForCustomer
 {
-
     /**
-     * @param UploadedFile $document
-     * @param string $customerId
      * @return void
      */
     public function __invoke(
@@ -27,7 +24,6 @@ class UploadDocumentForCustomer
             );
 
         dd($uploadedFile);
-
 
     }
 }

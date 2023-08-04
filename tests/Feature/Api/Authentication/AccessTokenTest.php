@@ -4,7 +4,6 @@ use App\Models\User;
 use Laravel\Passport\ClientRepository;
 use function Pest\Laravel\postJson;
 
-
 beforeEach(function () {
     $client = new ClientRepository();
 

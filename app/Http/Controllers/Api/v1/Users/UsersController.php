@@ -7,7 +7,6 @@ use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
 use App\OpenApi\SecuritySchemes\ApiAuthorizationTokenSecurityScheme;
 use App\Services\Users\CreateUser;
-use Doctrine\DBAL\Query\QueryException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -61,7 +60,7 @@ class UsersController extends Controller
     /**
      * Get a user by id
      *
-     * @param string $id - ID del recurso a mostrar
+     * @param  string  $id - ID del recurso a mostrar
      */
     #[OpenApi\Operation(tags: ['Users'], security: ApiAuthorizationTokenSecurityScheme::class)]
     public function show(string $id)
@@ -84,7 +83,7 @@ class UsersController extends Controller
     /**
      *Update a user by id
      *
-     * @param string $id - ID del recurso a actualizar
+     * @param  string  $id - ID del recurso a actualizar
      */
     #[OpenApi\Operation(tags: ['Users'], security: ApiAuthorizationTokenSecurityScheme::class)]
     public function update(Request $request, string $id)
@@ -119,7 +118,7 @@ class UsersController extends Controller
     /**
      *Delete a user By id
      *
-     * @param string $id - ID del recurso a eliminar
+     * @param  string  $id - ID del recurso a eliminar
      */
     #[OpenApi\Operation(tags: ['Users'], security: ApiAuthorizationTokenSecurityScheme::class)]
     public function destroy(string $id)
