@@ -21,7 +21,7 @@ return [
     */
     'path' => [
         'name' => env('STOPLIGHT_PATH_NAME', 'docs'),
-        'url' => env('STOPLIGHT_PATH_URL', '/'),
+        'url' => env('STOPLIGHT_PATH_URL', '/api/docs'),
     ],
 
     /*
