@@ -39,6 +39,9 @@ jobs:
     - name: Generate key
       run: php artisan key:generate
 
+    - name: Passport Key
+      run: php artisan passport:keys
+
     - name: Install Passport
       run:   php artisan passport:install  --force
 
