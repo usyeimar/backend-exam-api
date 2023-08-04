@@ -10,7 +10,7 @@ class CustomersTable extends Component
 {
     use WithPagination;
 
-    public $search = '';
+    public $search = 'u';
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
 
@@ -33,5 +33,11 @@ class CustomersTable extends Component
                 ->orderBy($this->sortField, $this->sortDirection)
                 ->paginate(10),
         ]);
+    }
+
+
+    public function deleteCustomer(Customer $customer)
+    {
+        $customer->delete();
     }
 }
