@@ -16,7 +16,7 @@ return new class extends Migration
             $table->bigInteger('identification_number')
                 ->nullable()
                 ->unique();
-            $table->text('identification_document')->nullable();
+            $table->text('identification_document_base_64')->nullable();
             $table->string('identification_type')->nullable();
             $table->string('city')->nullable();
             $table->string('country')->nullable();

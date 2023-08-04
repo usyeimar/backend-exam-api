@@ -1,10 +1,25 @@
 <?php
 
 use App\Models\User;
+use Laravel\Passport\ClientRepository;
+use function Pest\Laravel\postJson;
+
+
+beforeEach(function () {
+    $client = new ClientRepository();
+
+    $passport = $client->createPersonalAccessClient(
+        null,
+        'Test Personal Access Client',
+        'http://localhost'
+    );
+    config()->set('passport.personal_access_client.id', $passport->id);
+    config()->set('passport.personal_access_client.secret', $passport->secret);
+});
 
 test('can login with valid credentials', function () {
     $user = User::factory()->create();
-    $response = $this->postJson(
+    $response = postJson(
         route('auth.login'),
         [
             'email' => $user->email,
@@ -13,7 +28,7 @@ test('can login with valid credentials', function () {
         ]
     );
 
-    $response->dump()->assertJsonStructure([
+    $response->assertJsonStructure([
         'access_token',
         'token_type',
         'expires_at',
@@ -31,7 +46,7 @@ function validCredentials(array $overrides = []): array
 
 test('password must be valid', function () {
     $user = User::factory()->create();
-    $response = $this->postJson(
+    $response = postJson(
         route('auth.login'),
         validCredentials([
             'email' => $user->email,
@@ -51,7 +66,7 @@ test('password must be valid', function () {
 
 test('email is required', function () {
     $user = User::factory()->create();
-    $response = $this->postJson(
+    $response = postJson(
         route('auth.login'),
         validCredentials([
             'email' => null,

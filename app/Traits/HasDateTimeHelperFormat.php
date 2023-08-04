@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1\Traits;
+namespace App\Traits;
 
 use Illuminate\Support\Carbon;
 

@@ -2,6 +2,7 @@
 
 use App\Models\Customer;
 use App\Models\User;
+use function Pest\Laravel\getJson;
 
 test('i can list all customers', function () {
     $user = User::factory()->create();
@@ -12,7 +13,7 @@ test('i can list all customers', function () {
 
     $this->signIn($user);
 
-    $response = $this->getJson(route('api.v1.customers.index'));
+    $response = getJson(route('api.v1.customers.index'));
     $response->assertOk();
 
     $response->assertJsonStructure([

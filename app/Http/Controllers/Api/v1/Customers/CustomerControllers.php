@@ -5,16 +5,26 @@ namespace App\Http\Controllers\Api\v1\Customers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Http\Requests\UploadCustomerDocumentRequest;
 use App\Models\Customer;
+use App\OpenApi\SecuritySchemes\ApiAuthorizationTokenSecurityScheme;
 use App\Services\Customers\CreateCustomers;
+use App\Services\Customers\UploadDocumentForCustomer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Vyuldashev\LaravelOpenApi\Attributes as OpenApi;
+use function base64_encode;
 
+#[OpenApi\PathItem]
 class CustomerControllers extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Get all customers.
      */
+    #[OpenApi\Operation(tags: ['Customers'], security: ApiAuthorizationTokenSecurityScheme::class)]
     public function index()
     {
         try {
@@ -26,8 +36,9 @@ class CustomerControllers extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new customer.
      */
+    #[OpenApi\Operation(tags: ['Customers'], security: ApiAuthorizationTokenSecurityScheme::class)]
     public function store(CreateCustomerRequest $request, CreateCustomers $createCustomers)
     {
         try {
@@ -40,8 +51,9 @@ class CustomerControllers extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get a customer by id.
      */
+    #[OpenApi\Operation(tags: ['Customers'], security: ApiAuthorizationTokenSecurityScheme::class)]
     public function show(string $id)
     {
         try {
@@ -53,8 +65,9 @@ class CustomerControllers extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update a customer by id.
      */
+    #[OpenApi\Operation(tags: ['Customers'], security: ApiAuthorizationTokenSecurityScheme::class)]
     public function update(UpdateCustomerRequest $request, string $id)
     {
         try {
@@ -74,8 +87,9 @@ class CustomerControllers extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a customer by id.
      */
+    #[OpenApi\Operation(tags: ['Customers'], security: ApiAuthorizationTokenSecurityScheme::class)]
     public function destroy(string $id)
     {
         try {
@@ -90,4 +104,57 @@ class CustomerControllers extends Controller
         }
 
     }
+
+
+    /**
+     * Upload a document for a customer
+     *
+     * @param string $customerId - The customer id
+     * @param UploadCustomerDocumentRequest $request
+     * @param UploadDocumentForCustomer $uploadDocumentForCustomer
+     * @return JsonResponse|void
+     */
+    #[OpenApi\Operation(tags: ['Customers'], security: ApiAuthorizationTokenSecurityScheme::class)]
+    public function uploadDocument(
+        string $customerId,
+        UploadCustomerDocumentRequest $request,
+        UploadDocumentForCustomer $uploadDocumentForCustomer
+    ) {
+        try {
+
+            if (!$customerId) {
+                abort(400, 'Customer id is required');
+            }
+
+            $fileName = $customerId.'_'.time().'.'.$request->validated()['document']->getClientOriginalExtension();
+            $request->validated()['document']->storePubliclyAs(
+                'customers/documents',
+                $fileName,
+                'public'
+            );
+
+            $path = Storage::disk('public')->path('customers/documents/'.$fileName);
+
+
+            $customer = Customer::query()
+                ->findOrFail($customerId);
+
+
+            $customer->identification_document_base_64 = base64_encode(file_get_contents($path));
+
+            $customer->save();
+
+            return response()->json([
+                'success' => true,
+                'data' => $customer->fresh(),
+            ]);
+
+
+        } catch (ModelNotFoundException $e) {
+            abort(404, 'Not foun this resource with id: '.$customerId);
+        } catch (\Exception $e) {
+            abort(400, $e->getMessage());
+        }
+    }
+
 }

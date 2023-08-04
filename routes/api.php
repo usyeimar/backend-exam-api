@@ -46,7 +46,7 @@ Route::prefix('auth')->group(function () {
         ->middleware('auth:sanctum')
         ->name('auth.confirm-password');
 
-    Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::group(['middleware' => 'auth:api'], function () {
         Route::get('logout', LogoutController::class)
             ->name('auth.logout');
         Route::get('me', function (Request $request) {
@@ -57,11 +57,14 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('v1')
-    ->middleware('auth:sanctum')
+    ->middleware('auth:api')
     ->group(function () {
         Route::apiResource('customers', CustomerControllers::class)
             ->parameter('customers', 'customer_id')
             ->names('api.v1.customers');
+
+        Route::post('customers/{customer_id}/documents', [CustomerControllers::class, 'uploadDocument'])
+            ->name('api.v1.customers.documents.store');
 
         Route::apiResource('users', UsersController::class)
             ->parameter('users', 'user_id')

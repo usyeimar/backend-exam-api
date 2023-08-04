@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use function Pest\Laravel\postJson;
 
 test('i can create a customer', function () {
     $user = User::factory()->create();
@@ -15,7 +16,7 @@ test('i can create a customer', function () {
         'identification_type' => 'cc',
     ];
 
-    $response = $this->postJson(route('api.v1.customers.store'), $data);
+    $response = postJson(route('api.v1.customers.store'), $data);
 
     $response->assertCreated();
 

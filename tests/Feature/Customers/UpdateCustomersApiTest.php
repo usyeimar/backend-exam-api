@@ -2,6 +2,7 @@
 
 use App\Models\Customer;
 use App\Models\User;
+use function Pest\Laravel\putJson;
 
 test('i can update a customer', function () {
     $user = User::factory()->create();
@@ -17,7 +18,7 @@ test('i can update a customer', function () {
         'phone_number' => '5678383893',
     ];
 
-    $response = $this->putJson(route('api.v1.customers.update', $customer->id), $data);
+    $response = putJson(route('api.v1.customers.update', $customer->id), $data);
 
     $response->assertOk();
 

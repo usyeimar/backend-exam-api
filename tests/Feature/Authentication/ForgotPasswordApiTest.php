@@ -1,8 +1,10 @@
 <?php
 
+use function Pest\Laravel\postJson;
+
 test('send forgot password email', function () {
     $user = $this->signIn();
-    $response = $this->postJson(route('auth.forgot-password'), [
+    $response = postJson(route('auth.forgot-password'), [
         'email' => $user->email,
     ]);
 
@@ -14,7 +16,7 @@ test('send forgot password email', function () {
 });
 
 test('send forgot password email with invalid email', function () {
-    $response = $this->postJson(route('auth.forgot-password', ['email' => 'invalid']));
+    $response = postJson(route('auth.forgot-password', ['email' => 'invalid']));
     $response->assertStatus(422);
     $response->assertJsonStructure([
         'errors' => [
