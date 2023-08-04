@@ -1,4 +1,4 @@
-name: Testing
+name: Testing CI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  laravel-tests:
+  testing:
 
     runs-on: ubuntu-latest
 
